@@ -8,7 +8,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ARCHIVE://ECHO</title>
+<title>ARCHIVE SYSTEM</title>
 
 <style>
 
@@ -28,7 +28,7 @@ font-family:Arial;
 
 }
 
-/* 主界面 */
+/* 问题区 */
 
 #app{
 
@@ -48,7 +48,7 @@ text-align:center;
 
 .question{
 
-font-size:38px;
+font-size:40px;
 
 margin-bottom:40px;
 
@@ -56,15 +56,15 @@ margin-bottom:40px;
 
 /* 按钮 */
 
-.btns button{
+button{
 
 background:none;
 
-border:2px solid #fff;
+border:2px solid white;
 
-color:#fff;
+color:white;
 
-padding:12px 30px;
+padding:12px 28px;
 
 font-size:20px;
 
@@ -92,7 +92,7 @@ opacity:0;
 
 pointer-events:none;
 
-animation:flash 4s infinite;
+animation:flash 3.5s infinite;
 
 z-index:999;
 
@@ -106,31 +106,31 @@ z-index:999;
 
 94%{opacity:0;}
 
-95%{opacity:.25;}
+95%{opacity:.22;}
 
 96%{opacity:0;}
 
 }
 
-/* 菱形眼睛 */
+/* 中空菱形眼睛 */
 
 .eye{
 
 position:fixed;
 
-width:160px;
+width:170px;
 
-height:160px;
+height:170px;
 
-border:2px solid rgba(255,255,255,.15);
+border:2px solid rgba(255,255,255,.18);
 
 transform:rotate(45deg);
 
 opacity:0;
 
-transition:2s;
-
 pointer-events:none;
+
+transition:2s;
 
 }
 
@@ -144,9 +144,9 @@ width:18px;
 
 height:18px;
 
-background:#fff;
+border:2px solid #fff;
 
-border-radius:50%;
+background:transparent;
 
 left:50%;
 
@@ -156,11 +156,11 @@ transform:translate(-50%,-50%) rotate(-45deg);
 
 }
 
-.eye.left{left:18%;top:20%;}
+.eye.left{left:18%;top:22%;}
 
-.eye.right{right:18%;top:20%;}
+.eye.right{right:18%;top:22%;}
 
-/* 数据手 */
+/* 手 */
 
 .hand{
 
@@ -170,23 +170,19 @@ left:-300px;
 
 top:50%;
 
-color:#00ffff;
-
-font-size:80px;
-
 transform:translateY(-50%);
 
-animation:move 1.4s forwards;
+color:#00ffff;
+
+font-size:70px;
+
+animation:move 1.3s forwards;
 
 }
 
-@keyframes move{
+@keyframes move{to{left:45%;}}
 
-to{left:45%;}
-
-}
-
-/* 红色结算页 */
+/* 红色界面 */
 
 .red{
 
@@ -230,7 +226,7 @@ padding:10px 14px;
 
 font-size:18px;
 
-animation:pop .2s;
+animation:pop .18s;
 
 }
 
@@ -242,7 +238,7 @@ to{transform:scale(1);opacity:1;}
 
 }
 
-/* 最终归档 */
+/* 最终铺屏 */
 
 .final{
 
@@ -264,13 +260,11 @@ font-size:6vw;
 
 animation:blink .8s infinite;
 
-}
-
-@keyframes blink{
-
-50%{opacity:.5;}
+text-align:center;
 
 }
+
+@keyframes blink{50%{opacity:.5;}}
 
 </style>
 
@@ -288,11 +282,11 @@ animation:blink .8s infinite;
 
 <div id="q" class="question">你知道什么是喜欢吗？</div>
 
-<div class="btns" id="btns">
+<div id="btns">
 
-<button onclick="next1()">知道</button>
+<button onclick="q1()">知道</button>
 
-<button onclick="next1()">不知道</button>
+<button onclick="q1()">不知道</button>
 
 </div>
 
@@ -300,17 +294,17 @@ animation:blink .8s infinite;
 
 <script>
 
-let stage=0;
+let step=0;
 
-let escapeCount=0;
+let runCount=0;
 
-/* 鼠标追踪眼睛 */
+/* 鼠标跟随（菱形眼） */
 
 document.addEventListener("mousemove",(e)=>{
 
-document.querySelectorAll(".eye").forEach(eye=>{
+document.querySelectorAll(".eye").forEach(el=>{
 
-const r=eye.getBoundingClientRect();
+const r=el.getBoundingClientRect();
 
 const cx=r.left+r.width/2;
 
@@ -318,67 +312,67 @@ const cy=r.top+r.height/2;
 
 const a=Math.atan2(e.clientY-cy,e.clientX-cx);
 
-const x=Math.cos(a)*18;
+const x=Math.cos(a)*16;
 
-const y=Math.sin(a)*18;
+const y=Math.sin(a)*16;
 
-eye.style.opacity=.35;
+el.style.opacity=.35;
 
-eye.style.transform=`rotate(45deg) translate(${x}px,${y}px)`;
-
-});
+el.style.transform=`rotate(45deg) translate(${x}px,${y}px)`;
 
 });
 
-/* 第一阶段 */
+});
 
-function next1(){
+/* Q1 */
 
-stage=1;
+function q1(){
+
+step=1;
 
 document.getElementById("q").innerText="你会出轨吗？";
 
 document.getElementById("btns").innerHTML=`
 
-<button onclick="next2()">会</button>
+<button onclick="q2()">会</button>
 
-<button onclick="next2()">不会</button>
+<button onclick="q2()">不会</button>
 
 `;
 
 }
 
-/* 第二阶段 */
+/* Q2 */
 
-function next2(){
+function q2(){
 
-stage=2;
+step=2;
 
-document.querySelectorAll(".eye").forEach(e=>e.style.opacity=.4);
+document.querySelectorAll(".eye").forEach(e=>e.style.opacity=.45);
 
-document.getElementById("q").innerText="你会一直记得吗？";
+document.getElementById("q").innerText="你会忘记这段记录吗？";
 
 document.getElementById("btns").innerHTML=`
 
 <button id="yes" onclick="accept()">会</button>
 
-<button id="no" onclick="run()">不会</button>
+<button id="no" onclick="escapeBtn()">不会</button>
 
 `;
 
 }
 
-/* 逃跑按钮 */
+/* 不会逃跑 */
 
-function run(){
+function escapeBtn(){
 
-escapeCount++;
+runCount++;
 
 const no=document.getElementById("no");
 
 const yes=document.getElementById("yes");
 
-if(escapeCount<5){
+if(runCount<5){
 
 no.style.position="absolute";
 
@@ -386,13 +380,21 @@ no.style.left=Math.random()*500-250+"px";
 
 no.style.top=Math.random()*300-150+"px";
 
-yes.style.transform=`scale(${1+escapeCount*0.2})`;
+yes.style.transform=`scale(${1+runCount*0.22})`;
 
 }else{
 
 no.remove();
 
-yes.style.transform="scale(2)";
+yes.style.transform="scale(2.6)";
+
+yes.style.position="fixed";
+
+yes.style.left="50%";
+
+yes.style.top="55%";
+
+yes.style.transform="translate(-50%,-50%) scale(2.6)";
 
 }
 
@@ -406,17 +408,11 @@ const hand=document.createElement("div");
 
 hand.className="hand";
 
-hand.innerText="▣▣▣ 数据连接中";
+hand.innerText="▣ ARCHIVE LINKING";
 
 document.body.appendChild(hand);
 
-/* 手抓取 */
-
-setTimeout(()=>{
-
-showRed();
-
-},1400);
+setTimeout(showRed,1300);
 
 }
 
@@ -428,9 +424,9 @@ document.body.innerHTML=`
 
 <div class="red">
 
-<h1>系统异常</h1>
+<h1>系统已归档</h1>
 
-<button onclick="final()">确认归档</button>
+<button onclick="final()">确认</button>
 
 </div>
 
@@ -452,9 +448,9 @@ spawn();
 
 i++;
 
-if(i>70) clearInterval(t);
+if(i>80) clearInterval(t);
 
-},80);
+},60);
 
 setTimeout(()=>{
 
@@ -462,15 +458,25 @@ document.body.innerHTML=`
 
 <div class="final">
 
-ARCHIVE COMPLETE
+我不允许你忘记我
+
+<br>
+
+<small style="font-size:2vw;opacity:.7;">
+
+SYSTEM OVERRIDE OUTPUT
+
+</small>
 
 </div>
 
 `;
 
-},6000);
+},5000);
 
 }
+
+/* 弹窗 */
 
 function spawn(){
 
@@ -478,7 +484,7 @@ const d=document.createElement("div");
 
 d.className="popup";
 
-d.innerText="记录已写入档案";
+d.innerText="记录无法删除";
 
 d.style.left=Math.random()*100+"vw";
 
