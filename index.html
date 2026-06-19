@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ARCHIVE://ECHO</title>
+
+<style>
+
+html,body{
+
+margin:0;
+
+height:100%;
+
+overflow:hidden;
+
+background:#000;
+
+color:#fff;
+
+font-family:Arial;
+
+}
+
+/* 主界面 */
+
+#app{
+
+height:100%;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+text-align:center;
+
+}
+
+.question{
+
+font-size:38px;
+
+margin-bottom:40px;
+
+}
+
+/* 按钮 */
+
+.btns button{
+
+background:none;
+
+border:2px solid #fff;
+
+color:#fff;
+
+padding:12px 30px;
+
+font-size:20px;
+
+cursor:pointer;
+
+margin:10px;
+
+transition:.3s;
+
+}
+
+button:hover{transform:scale(1.1);}
+
+/* 红色闪屏 */
+
+.flash{
+
+position:fixed;
+
+inset:0;
+
+background:red;
+
+opacity:0;
+
+pointer-events:none;
+
+animation:flash 4s infinite;
+
+z-index:999;
+
+}
+
+@keyframes flash{
+
+0%,92%,100%{opacity:0;}
+
+93%{opacity:.12;}
+
+94%{opacity:0;}
+
+95%{opacity:.25;}
+
+96%{opacity:0;}
+
+}
+
+/* 菱形眼睛 */
+
+.eye{
+
+position:fixed;
+
+width:160px;
+
+height:160px;
+
+border:2px solid rgba(255,255,255,.15);
+
+transform:rotate(45deg);
+
+opacity:0;
+
+transition:2s;
+
+pointer-events:none;
+
+}
+
+.eye::after{
+
+content:"";
+
+position:absolute;
+
+width:18px;
+
+height:18px;
+
+background:#fff;
+
+border-radius:50%;
+
+left:50%;
+
+top:50%;
+
+transform:translate(-50%,-50%) rotate(-45deg);
+
+}
+
+.eye.left{left:18%;top:20%;}
+
+.eye.right{right:18%;top:20%;}
+
+/* 数据手 */
+
+.hand{
+
+position:fixed;
+
+left:-300px;
+
+top:50%;
+
+color:#00ffff;
+
+font-size:80px;
+
+transform:translateY(-50%);
+
+animation:move 1.4s forwards;
+
+}
+
+@keyframes move{
+
+to{left:45%;}
+
+}
+
+/* 红色结算页 */
+
+.red{
+
+position:fixed;
+
+inset:0;
+
+background:#8b0000;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+}
+
+.red h1{
+
+font-size:60px;
+
+margin-bottom:30px;
+
+}
+
+/* 弹窗 */
+
+.popup{
+
+position:fixed;
+
+background:black;
+
+border:1px solid red;
+
+color:red;
+
+padding:10px 14px;
+
+font-size:18px;
+
+animation:pop .2s;
+
+}
+
+@keyframes pop{
+
+from{transform:scale(.2);opacity:0;}
+
+to{transform:scale(1);opacity:1;}
+
+}
+
+/* 最终归档 */
+
+.final{
+
+position:fixed;
+
+inset:0;
+
+background:black;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+color:red;
+
+font-size:6vw;
+
+animation:blink .8s infinite;
+
+}
+
+@keyframes blink{
+
+50%{opacity:.5;}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="flash"></div>
+
+<div class="eye left"></div>
+
+<div class="eye right"></div>
+
+<div id="app">
+
+<div id="q" class="question">你知道什么是喜欢吗？</div>
+
+<div class="btns" id="btns">
+
+<button onclick="next1()">知道</button>
+
+<button onclick="next1()">不知道</button>
+
+</div>
+
+</div>
+
+<script>
+
+let stage=0;
+
+let escapeCount=0;
+
+/* 鼠标追踪眼睛 */
+
+document.addEventListener("mousemove",(e)=>{
+
+document.querySelectorAll(".eye").forEach(eye=>{
+
+const r=eye.getBoundingClientRect();
+
+const cx=r.left+r.width/2;
+
+const cy=r.top+r.height/2;
+
+const a=Math.atan2(e.clientY-cy,e.clientX-cx);
+
+const x=Math.cos(a)*18;
+
+const y=Math.sin(a)*18;
+
+eye.style.opacity=.35;
+
+eye.style.transform=`rotate(45deg) translate(${x}px,${y}px)`;
+
+});
+
+});
+
+/* 第一阶段 */
+
+function next1(){
+
+stage=1;
+
+document.getElementById("q").innerText="你会出轨吗？";
+
+document.getElementById("btns").innerHTML=`
+
+<button onclick="next2()">会</button>
+
+<button onclick="next2()">不会</button>
+
+`;
+
+}
+
+/* 第二阶段 */
+
+function next2(){
+
+stage=2;
+
+document.querySelectorAll(".eye").forEach(e=>e.style.opacity=.4);
+
+document.getElementById("q").innerText="你会一直记得吗？";
+
+document.getElementById("btns").innerHTML=`
+
+<button id="yes" onclick="accept()">会</button>
+
+<button id="no" onclick="run()">不会</button>
+
+`;
+
+}
+
+/* 逃跑按钮 */
+
+function run(){
+
+escapeCount++;
+
+const no=document.getElementById("no");
+
+const yes=document.getElementById("yes");
+
+if(escapeCount<5){
+
+no.style.position="absolute";
+
+no.style.left=Math.random()*500-250+"px";
+
+no.style.top=Math.random()*300-150+"px";
+
+yes.style.transform=`scale(${1+escapeCount*0.2})`;
+
+}else{
+
+no.remove();
+
+yes.style.transform="scale(2)";
+
+}
+
+}
+
+/* 接受 */
+
+function accept(){
+
+const hand=document.createElement("div");
+
+hand.className="hand";
+
+hand.innerText="▣▣▣ 数据连接中";
+
+document.body.appendChild(hand);
+
+/* 手抓取 */
+
+setTimeout(()=>{
+
+showRed();
+
+},1400);
+
+}
+
+/* 红色界面 */
+
+function showRed(){
+
+document.body.innerHTML=`
+
+<div class="red">
+
+<h1>系统异常</h1>
+
+<button onclick="final()">确认归档</button>
+
+</div>
+
+`;
+
+}
+
+/* 弹窗雨 */
+
+function final(){
+
+document.body.innerHTML="";
+
+let i=0;
+
+const t=setInterval(()=>{
+
+spawn();
+
+i++;
+
+if(i>70) clearInterval(t);
+
+},80);
+
+setTimeout(()=>{
+
+document.body.innerHTML=`
+
+<div class="final">
+
+ARCHIVE COMPLETE
+
+</div>
+
+`;
+
+},6000);
+
+}
+
+function spawn(){
+
+const d=document.createElement("div");
+
+d.className="popup";
+
+d.innerText="记录已写入档案";
+
+d.style.left=Math.random()*100+"vw";
+
+d.style.top=Math.random()*100+"vh";
+
+document.body.appendChild(d);
+
+}
+
+</script>
+
+</body>
+
+</html>
